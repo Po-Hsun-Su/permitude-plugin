@@ -1,0 +1,16 @@
+{
+  "name": "deckhq",
+  "displayName": "DeckHQ",
+  "description": "Design a permit-ready deck. The plugin connects Claude Code to the DeckHQ studio; the design work happens there.",
+  "author": {
+    "name": "DeckHQ"
+  },
+  "homepage": "https://deckhq.com",
+  "keywords": [
+    "deck",
+    "cad",
+    "permit",
+    "bim",
+    "construction"
+  ]
+}
