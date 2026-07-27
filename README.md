@@ -18,7 +18,12 @@ The first time DeckHQ needs your account, it opens a browser sign-in.
 ## Requirements
 
 - Claude Code, with an active Claude subscription
-- `git` and `python3` — both standard on macOS and Linux
+- `git` and Python 3
+
+On macOS and Linux both are usually already there. On Windows you'll need
+[Git for Windows](https://git-scm.com/download/win) and Python 3, set up so that
+`git` and `python3` both work in a new terminal — or simply ask Claude Code to
+sort it out for you before you install.
 
 ## Privacy
 
