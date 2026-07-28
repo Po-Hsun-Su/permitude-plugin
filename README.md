@@ -3,6 +3,9 @@
 Design a deck — framing, hardware, code checks, and a permit-ready drawing set —
 by describing what you want.
 
+**Permitude is in closed beta.** Installing it takes an invitation, and your
+invitation says how to start once it is installed.
+
 ## Install
 
 In a terminal, from the folder you want to design in:
@@ -16,9 +19,6 @@ claude plugin install permitude --scope project
 Claude Code there, and in none of your other work. Leave the flag off and it
 loads in every Claude Code session on the machine, which is rarely what you
 want.
-
-Then open **[studio.permitude.com](https://studio.permitude.com)** and start your deck.
-The first time Permitude needs your account, it opens a browser sign-in.
 
 ## Try it without installing
 
