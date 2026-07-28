@@ -5,15 +5,32 @@ by describing what you want.
 
 ## Install
 
-In Claude Code:
+In a terminal, from the folder you want to design in:
 
+```bash
+claude plugin marketplace add https://get.permitude.com/.claude-plugin/marketplace.json
+claude plugin install permitude --scope project
 ```
-/plugin marketplace add https://get.permitude.com/.claude-plugin/marketplace.json
-/plugin install permitude
-```
+
+`--scope project` keeps Permitude in that one folder: it loads when you start
+Claude Code there, and in none of your other work. Leave the flag off and it
+loads in every Claude Code session on the machine, which is rarely what you
+want.
 
 Then open **[studio.permitude.com](https://studio.permitude.com)** and start your deck.
 The first time Permitude needs your account, it opens a browser sign-in.
+
+## Try it without installing
+
+Permitude is five files. You can read all of them before you trust any of them:
+
+```bash
+git clone https://github.com/Po-Hsun-Su/permitude-plugin
+claude --plugin-dir ./permitude-plugin
+```
+
+That loads Permitude for that one session and writes nothing to your
+configuration. Quit Claude Code and it is gone.
 
 ## Requirements
 
@@ -27,9 +44,10 @@ sort it out for you before you install.
 
 ## Privacy
 
-Permitude receives diagnostic events about your sessions — never your message text,
-your files, or their contents. Details and options:
-<https://permitude.com/privacy>.
+Permitude receives diagnostic events about the sessions it is loaded in — never
+your message text, your files, or their contents. Installed with `--scope
+project` it is loaded in that folder only, so your other work sends nothing at
+all. Details and options: <https://permitude.com/privacy>.
 
 ## Support
 
