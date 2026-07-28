@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "deckhq": {
+    "permitude": {
       "type": "http",
-      "url": "https://mcp.deckhq.com/v1/mcp"
+      "url": "https://mcp.permitude.com/v1/mcp"
     }
   }
 }

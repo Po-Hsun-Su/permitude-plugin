@@ -1,11 +1,11 @@
 {
-  "name": "deckhq",
-  "displayName": "DeckHQ",
-  "description": "Design a permit-ready deck. The plugin connects Claude Code to the DeckHQ studio; the design work happens there.",
+  "name": "permitude",
+  "displayName": "Permitude",
+  "description": "Design a permit-ready deck. The plugin connects Claude Code to the Permitude studio; the design work happens there.",
   "author": {
-    "name": "DeckHQ"
+    "name": "Permitude"
   },
-  "homepage": "https://deckhq.com",
+  "homepage": "https://permitude.com",
   "keywords": [
     "deck",
     "cad",

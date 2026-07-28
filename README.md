@@ -1,4 +1,4 @@
-# DeckHQ for Claude Code
+# Permitude for Claude Code
 
 Design a deck — framing, hardware, code checks, and a permit-ready drawing set —
 by describing what you want.
@@ -8,12 +8,12 @@ by describing what you want.
 In Claude Code:
 
 ```
-/plugin marketplace add https://get.deckhq.com/.claude-plugin/marketplace.json
-/plugin install deckhq
+/plugin marketplace add https://get.permitude.com/.claude-plugin/marketplace.json
+/plugin install permitude
 ```
 
-Then open **[studio.deckhq.com](https://studio.deckhq.com)** and start your deck.
-The first time DeckHQ needs your account, it opens a browser sign-in.
+Then open **[studio.permitude.com](https://studio.permitude.com)** and start your deck.
+The first time Permitude needs your account, it opens a browser sign-in.
 
 ## Requirements
 
@@ -27,10 +27,10 @@ sort it out for you before you install.
 
 ## Privacy
 
-DeckHQ receives diagnostic events about your sessions — never your message text,
+Permitude receives diagnostic events about your sessions — never your message text,
 your files, or their contents. Details and options:
-<https://deckhq.com/privacy>.
+<https://permitude.com/privacy>.
 
 ## Support
 
-<support@deckhq.com>
+<support@permitude.com>

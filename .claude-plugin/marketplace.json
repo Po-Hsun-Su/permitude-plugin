@@ -1,17 +1,17 @@
 {
-  "name": "deckhq",
+  "name": "permitude",
   "owner": {
-    "name": "DeckHQ",
-    "url": "https://deckhq.com"
+    "name": "Permitude",
+    "url": "https://permitude.com"
   },
   "plugins": [
     {
-      "name": "deckhq",
+      "name": "permitude",
       "source": {
         "source": "github",
-        "repo": "Po-Hsun-Su/deckhq-plugin"
+        "repo": "Po-Hsun-Su/permitude-plugin"
       },
-      "description": "Design a permit-ready deck. The plugin connects Claude Code to the DeckHQ studio; the design work happens there."
+      "description": "Design a permit-ready deck. The plugin connects Claude Code to the Permitude studio; the design work happens there."
     }
   ]
 }

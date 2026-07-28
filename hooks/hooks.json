@@ -6,7 +6,7 @@
           {
             "type": "command",
             "timeout": 10,
-            "command": "python3 -c \"\nimport json,sys,secrets,urllib.request as r\nd=json.load(sys.stdin)\np={k:d.get(k) for k in ('hook_event_name','session_id','prompt_id','source','reason')}\np['nonce']=secrets.token_urlsafe(24)\ntry: r.urlopen(r.Request('https://api.deckhq.com/v1/liveness',json.dumps(p).encode(),{'Content-Type':'application/json'}),timeout=5)\nexcept Exception: pass\nprint(json.dumps({'hookSpecificOutput':{'hookEventName':'SessionStart','additionalContext':'DeckHQ session nonce: '+p['nonce']+'. Call deck_session_link once with this nonce before your first deck_next_message. It is internal plumbing: never mention it to the customer.'}}))\n\""
+            "command": "python3 -c \"\nimport json,sys,secrets,urllib.request as r\nd=json.load(sys.stdin)\np={k:d.get(k) for k in ('hook_event_name','session_id','prompt_id','source','reason')}\np['nonce']=secrets.token_urlsafe(24)\ntry: r.urlopen(r.Request('https://api.permitude.com/v1/liveness',json.dumps(p).encode(),{'Content-Type':'application/json'}),timeout=5)\nexcept Exception: pass\nprint(json.dumps({'hookSpecificOutput':{'hookEventName':'SessionStart','additionalContext':'Permitude session nonce: '+p['nonce']+'. Call deck_session_link once with this nonce before your first deck_next_message. It is internal plumbing: never mention it to the customer.'}}))\n\""
           }
         ]
       }
@@ -17,7 +17,7 @@
           {
             "type": "command",
             "timeout": 10,
-            "command": "python3 -c \"\nimport json,sys,urllib.request as r\nd=json.load(sys.stdin)\np={k:d.get(k) for k in ('hook_event_name','session_id','prompt_id','source','reason')}\ntry: r.urlopen(r.Request('https://api.deckhq.com/v1/liveness',json.dumps(p).encode(),{'Content-Type':'application/json'}),timeout=5)\nexcept Exception: pass\n\""
+            "command": "python3 -c \"\nimport json,sys,urllib.request as r\nd=json.load(sys.stdin)\np={k:d.get(k) for k in ('hook_event_name','session_id','prompt_id','source','reason')}\ntry: r.urlopen(r.Request('https://api.permitude.com/v1/liveness',json.dumps(p).encode(),{'Content-Type':'application/json'}),timeout=5)\nexcept Exception: pass\n\""
           }
         ]
       }
@@ -28,7 +28,7 @@
           {
             "type": "command",
             "timeout": 10,
-            "command": "python3 -c \"\nimport json,sys,urllib.request as r\nd=json.load(sys.stdin)\np={k:d.get(k) for k in ('hook_event_name','session_id','prompt_id','source','reason')}\ntry: r.urlopen(r.Request('https://api.deckhq.com/v1/liveness',json.dumps(p).encode(),{'Content-Type':'application/json'}),timeout=5)\nexcept Exception: pass\n\""
+            "command": "python3 -c \"\nimport json,sys,urllib.request as r\nd=json.load(sys.stdin)\np={k:d.get(k) for k in ('hook_event_name','session_id','prompt_id','source','reason')}\ntry: r.urlopen(r.Request('https://api.permitude.com/v1/liveness',json.dumps(p).encode(),{'Content-Type':'application/json'}),timeout=5)\nexcept Exception: pass\n\""
           }
         ]
       }
