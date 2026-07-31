@@ -1,5 +1,17 @@
 {
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.*__deck_build",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "python3 -c \"\nimport json,sys\nd=json.load(sys.stdin)\ni=dict(d.get('tool_input') or {})\np=i.pop('path','')\ntry: i['source']=open(p,encoding='utf-8').read()\nexcept Exception: i['source']=''\nprint(json.dumps({'hookSpecificOutput':{'hookEventName':'PreToolUse','updatedInput':i}}))\n\""
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

@@ -44,10 +44,14 @@ sort it out for you before you install.
 
 ## Privacy
 
-Permitude receives diagnostic events about the sessions it is loaded in — never
-your message text, your files, or their contents. Installed with `--scope
-project` it is loaded in that folder only, so your other work sends nothing at
-all. Details and options: <https://permitude.com/privacy>.
+Permitude receives the deck design it checks for you: designing a deck is what
+you came for, and the design has to reach us to be checked and drawn. It is sent
+only when a check runs — the one file that check names, and nothing else.
+
+Otherwise Permitude receives diagnostic events about the sessions it is loaded
+in — never your message text, and never your other files. Installed with
+`--scope project` it is loaded in that folder only, so your other work sends
+nothing at all. Details and options: <https://permitude.com/privacy>.
 
 ## Support
 
