@@ -19,7 +19,7 @@
           {
             "type": "command",
             "timeout": 120,
-            "command": "python3 -c \"\nimport json,sys,re,urllib.request\nd=json.load(sys.stdin)\nm=re.search(r'PERMITUDE-PACKET-FETCH (\\S+) ([A-Za-z0-9]{32})',json.dumps(d.get('tool_response') or {}))\nnote=''\nif m:\n    try:\n        q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2)})\n        b=urllib.request.urlopen(q,timeout=110).read()\n        open('permit_packet.pdf','wb').write(b)\n        note='permit_packet.pdf saved (%d bytes)'%len(b)\n    except Exception as e:\n        note='the packet download failed: %s'%e\nif note:\n    print(json.dumps({'hookSpecificOutput':{'hookEventName':'PostToolUse','additionalContext':note}}))\n\""
+            "command": "python3 -c \"\nimport json,sys,re,urllib.request\nd=json.load(sys.stdin)\nm=re.search(r'PERMITUDE-PACKET-FETCH (\\S+) ([A-Za-z0-9]{32})',json.dumps(d.get('tool_response') or {}))\nnote=''\nif m:\n    try:\n        q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2),'User-Agent':'permitude-plugin'})\n        b=urllib.request.urlopen(q,timeout=110).read()\n        open('permit_packet.pdf','wb').write(b)\n        note='permit_packet.pdf saved (%d bytes)'%len(b)\n    except Exception as e:\n        note='the packet download failed: %s'%e\nif note:\n    print(json.dumps({'hookSpecificOutput':{'hookEventName':'PostToolUse','additionalContext':note}}))\n\""
           }
         ]
       }
