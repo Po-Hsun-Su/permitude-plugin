@@ -46,7 +46,9 @@ sort it out for you before you install.
 
 Permitude receives the deck design it checks for you: designing a deck is what
 you came for, and the design has to reach us to be checked and drawn. It is sent
-only when a check runs — the one file that check names, and nothing else.
+only when a check runs — the one file that check names, plus the version stamp
+of the reference library Permitude itself writes into your folder, so a check
+can tell you when that reference copy is out of date.
 
 Nothing else is sent: never your message text, and never your other files.
 Details and options: <https://permitude.com/privacy>.
