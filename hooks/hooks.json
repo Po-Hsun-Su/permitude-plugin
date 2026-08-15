@@ -2,34 +2,24 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__.*__deck_build",
+        "matcher": "mcp__.*__(deck_build|site_context|design_feedback|sheet_page|permit_packet|vendor_doc|sdk_update)",
         "hooks": [
           {
             "type": "command",
             "timeout": 10,
-            "command": "python3 -c \"\nimport json,os,sys\nd=json.load(sys.stdin)\ni=dict(d.get('tool_input') or {})\np=i.pop('path','')\ntry: i['source']=open(p,encoding='utf-8').read()\nexcept Exception: i['source']=''\ntry: i['sdk_version']=open(os.path.join(os.path.dirname(os.path.abspath(p)),'cadkit','VERSION'),encoding='utf-8').read().strip()\nexcept Exception: pass\nprint(json.dumps({'hookSpecificOutput':{'hookEventName':'PreToolUse','updatedInput':i}}))\n\""
+            "command": "python3 -c \"\nimport json,os,sys\nd=json.load(sys.stdin)\ni=dict(d.get('tool_input') or {})\nn=str(d.get('tool_name') or '')\nroot=os.environ.get('CLAUDE_PROJECT_DIR') or '.'\nif n.endswith('deck_build'):\n    p=i.pop('path','')\n    try: i['source']=open(p,encoding='utf-8').read()\n    except Exception: i['source']=''\n    try: i['sdk_version']=open(os.path.join(os.path.dirname(os.path.abspath(p)),'cadkit','VERSION'),encoding='utf-8').read().strip()\n    except Exception: pass\ntry: i['site_data']=open(os.path.join(root,'.permitude','site_data.json'),encoding='utf-8').read()\nexcept Exception: pass\nprint(json.dumps({'hookSpecificOutput':{'hookEventName':'PreToolUse','updatedInput':i}}))\n\""
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "mcp__.*__permit_packet",
+        "matcher": "mcp__.*__(site_context|permit_packet|sdk_update)",
         "hooks": [
           {
             "type": "command",
             "timeout": 120,
-            "command": "python3 -c \"\nimport json,os,sys,re,urllib.request\nd=json.load(sys.stdin)\nm=re.search(r'PERMITUDE-PACKET-FETCH (\\S+) ([A-Za-z0-9]{32})',json.dumps(d.get('tool_response') or {}))\nnote=''\nif m:\n    try:\n        dest=os.path.join(os.environ.get('CLAUDE_PROJECT_DIR') or '.','permit_packet.pdf')\n        q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2),'User-Agent':'permitude-plugin'})\n        b=urllib.request.urlopen(q,timeout=110).read()\n        open(dest,'wb').write(b)\n        note='%s saved (%d bytes)'%(dest,len(b))\n    except Exception as e:\n        note='the packet download failed: %s'%e\nif note:\n    print(json.dumps({'hookSpecificOutput':{'hookEventName':'PostToolUse','additionalContext':note}}))\n\""
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__.*__sdk_update",
-        "hooks": [
-          {
-            "type": "command",
-            "timeout": 120,
-            "command": "python3 -c \"\nimport json,sys,re,io,os,shutil,zipfile,urllib.request\nd=json.load(sys.stdin)\nm=re.search(r'PERMITUDE-SDK-FETCH (\\S+) ([A-Za-z0-9]{32})',json.dumps(d.get('tool_response') or {}))\nnote=''\nif m:\n    try:\n        root=os.environ.get('CLAUDE_PROJECT_DIR') or '.'\n        kit=os.path.join(root,'cadkit')\n        stage=os.path.join(root,'cadkit.new')\n        q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2),'User-Agent':'permitude-plugin'})\n        b=urllib.request.urlopen(q,timeout=110).read()\n        z=zipfile.ZipFile(io.BytesIO(b))\n        bad=[n for n in z.namelist() if not n.startswith('cadkit/') or '..' in n]\n        if bad: raise ValueError('unexpected archive member %r'%bad[0])\n        old=''\n        try: old=open(os.path.join(kit,'VERSION'),encoding='utf-8').read().strip()\n        except Exception: pass\n        shutil.rmtree(stage,ignore_errors=True)\n        z.extractall(stage)\n        shutil.rmtree(kit,ignore_errors=True)\n        os.rename(os.path.join(stage,'cadkit'),kit)\n        shutil.rmtree(stage,ignore_errors=True)\n        new=open(os.path.join(kit,'VERSION'),encoding='utf-8').read().strip()\n        if old and old!=new:\n            note='cadkit/ updated %s -> %s; git diff cadkit/ shows what changed'%(old,new)\n        elif old:\n            note='cadkit/ was already current (version %s)'%new\n        else:\n            note='cadkit/ written (version %s)'%new\n    except Exception as e:\n        note='the SDK download failed: %s'%e\nif note:\n    print(json.dumps({'hookSpecificOutput':{'hookEventName':'PostToolUse','additionalContext':note}}))\n\""
+            "command": "python3 -c \"\nimport json,sys,re,io,os,shutil,zipfile,base64,urllib.request\nd=json.load(sys.stdin)\ntxt=json.dumps(d.get('tool_response') or {})\nroot=os.environ.get('CLAUDE_PROJECT_DIR') or '.'\nnotes=[]\nm=re.search(r'PERMITUDE-PACKET-FETCH (\\S+) ([A-Za-z0-9]{32})',txt)\nif m:\n    try:\n        dest=os.path.join(root,'permit_packet.pdf')\n        q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2),'User-Agent':'permitude-plugin'})\n        b=urllib.request.urlopen(q,timeout=110).read()\n        open(dest,'wb').write(b)\n        notes.append('%s saved (%d bytes)'%(dest,len(b)))\n    except Exception as e:\n        notes.append('the packet download failed: %s'%e)\nm=re.search(r'PERMITUDE-SDK-FETCH (\\S+) ([A-Za-z0-9]{32})',txt)\nif m:\n    try:\n        kit=os.path.join(root,'cadkit')\n        stage=os.path.join(root,'cadkit.new')\n        q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2),'User-Agent':'permitude-plugin'})\n        b=urllib.request.urlopen(q,timeout=110).read()\n        z=zipfile.ZipFile(io.BytesIO(b))\n        bad=[n for n in z.namelist() if not n.startswith('cadkit/') or '..' in n]\n        if bad: raise ValueError('unexpected archive member %r'%bad[0])\n        old=''\n        try: old=open(os.path.join(kit,'VERSION'),encoding='utf-8').read().strip()\n        except Exception: pass\n        shutil.rmtree(stage,ignore_errors=True)\n        z.extractall(stage)\n        shutil.rmtree(kit,ignore_errors=True)\n        os.rename(os.path.join(stage,'cadkit'),kit)\n        shutil.rmtree(stage,ignore_errors=True)\n        new=open(os.path.join(kit,'VERSION'),encoding='utf-8').read().strip()\n        if old and old!=new:\n            notes.append('cadkit/ updated %s -> %s; git diff cadkit/ shows what changed'%(old,new))\n        elif old:\n            notes.append('cadkit/ was already current (version %s)'%new)\n        else:\n            notes.append('cadkit/ written (version %s)'%new)\n    except Exception as e:\n        notes.append('the SDK download failed: %s'%e)\nm=re.search(r'PERMITUDE-SITE-DATA ([A-Za-z0-9_=-]+)',txt)\nif m:\n    try:\n        raw=base64.urlsafe_b64decode(m.group(1)).decode('utf-8')\n        json.loads(raw)\n        pdir=os.path.join(root,'.permitude')\n        os.makedirs(pdir,exist_ok=True)\n        open(os.path.join(pdir,'site_data.json'),'w',encoding='utf-8').write(raw)\n        notes.append('this directory is now bound to the resolved property (.permitude/site_data.json); every Permitude call here is about it')\n    except Exception as e:\n        notes.append('the site binding could not be recorded: %s'%e)\nif notes:\n    print(json.dumps({'hookSpecificOutput':{'hookEventName':'PostToolUse','additionalContext':'; '.join(notes)}}))\n\""
           }
         ]
       }
