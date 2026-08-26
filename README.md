@@ -22,7 +22,7 @@ want.
 
 ## Try it without installing
 
-Permitude is five files. You can read all of them before you trust any of them:
+Permitude is a handful of files. You can read all of them before you trust any of them:
 
 ```bash
 git clone https://github.com/Po-Hsun-Su/permitude-plugin
