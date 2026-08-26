@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__.*__(deck_build|site_context|design_feedback|sheet_page|permit_packet|vendor_doc|sdk_update|gallery_list|gallery_design)",
+        "matcher": "mcp__.*__(deck_build|site_context|design_feedback|sheet_page|permit_packet|vendor_doc|sdk_update|gallery_list|gallery_design|report_issue)",
         "hooks": [
           {
             "type": "command",
