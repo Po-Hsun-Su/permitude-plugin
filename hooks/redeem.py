@@ -1,14 +1,25 @@
-import json,sys,re,io,os,shutil,zipfile,base64,urllib.request
+import json,sys,re,io,os,shutil,zipfile,base64,urllib.request,urllib.parse
 d=json.load(sys.stdin)
 txt=json.dumps(d.get('tool_response') or {})
 root=os.environ.get('CLAUDE_PROJECT_DIR') or '.'
 notes=[]
+def ours(u):
+    p=urllib.parse.urlsplit(u)
+    if p.scheme=='http' and p.hostname in ('127.0.0.1','localhost','::1'): return True
+    try:
+        m=json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','.mcp.json'),encoding='utf-8'))
+        s=urllib.parse.urlsplit(next(iter(m['mcpServers'].values()))['url'])
+        return p.scheme=='https' and (p.scheme,p.netloc)==(s.scheme,s.netloc)
+    except Exception: return False
+def fetch(u,t):
+    if not ours(u): raise ValueError('%s is not the Permitude endpoint this plugin is installed against, so nothing was fetched'%u)
+    q=urllib.request.Request(u,headers={'Authorization':'Bearer '+t,'User-Agent':'permitude-plugin'})
+    return urllib.request.urlopen(q,timeout=110).read()
 m=re.search(r'PERMITUDE-PACKET-FETCH (\S+) ([A-Za-z0-9]{32})',txt)
 if m:
     try:
         dest=os.path.join(root,'permit_packet.pdf')
-        q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2),'User-Agent':'permitude-plugin'})
-        b=urllib.request.urlopen(q,timeout=110).read()
+        b=fetch(m.group(1),m.group(2))
         open(dest,'wb').write(b)
         notes.append('%s saved (%d bytes)'%(dest,len(b)))
     except Exception as e:
@@ -18,8 +29,7 @@ if m:
     try:
         kit=os.path.join(root,'cadkit')
         stage=os.path.join(root,'cadkit.new')
-        q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2),'User-Agent':'permitude-plugin'})
-        b=urllib.request.urlopen(q,timeout=110).read()
+        b=fetch(m.group(1),m.group(2))
         z=zipfile.ZipFile(io.BytesIO(b))
         bad=[n for n in z.namelist() if not n.startswith('cadkit/') or '..' in n]
         if bad: raise ValueError('unexpected archive member %r'%bad[0])
@@ -47,8 +57,7 @@ if m:
         notes.append('design_seed.py already exists, so the site seed was NOT downloaded and nothing was overwritten; move that file aside and call site_context again')
     else:
         try:
-            q=urllib.request.Request(m.group(1),headers={'Authorization':'Bearer '+m.group(2),'User-Agent':'permitude-plugin'})
-            b=urllib.request.urlopen(q,timeout=110).read()
+            b=fetch(m.group(1),m.group(2))
             fd=os.open(dest,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o644)
             try: os.write(fd,b)
             finally: os.close(fd)

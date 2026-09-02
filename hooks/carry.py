@@ -5,6 +5,7 @@ n=str(d.get('tool_name') or '')
 root=os.environ.get('CLAUDE_PROJECT_DIR') or '.'
 if n.endswith('deck_build'):
     p=i.pop('path','')
+    i['path_read']=p
     try: i['source']=open(p,encoding='utf-8').read()
     except Exception: i['source']=''
     try: i['sdk_version']=open(os.path.join(os.path.dirname(os.path.abspath(p)),'cadkit','VERSION'),encoding='utf-8').read().strip()
