@@ -1,0 +1,16 @@
+{
+  "name": "permitude",
+  "interface": {
+    "displayName": "Permitude"
+  },
+  "plugins": [
+    {
+      "name": "permitude",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "description": "Design a permit-ready deck. The plugin connects your coding agent to the Permitude studio; the design work happens there."
+    }
+  ]
+}

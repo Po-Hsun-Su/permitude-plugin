@@ -1,0 +1,30 @@
+{
+  "permitude-carry": {
+    "PreToolUse": [
+      {
+        "matcher": "^call_mcp_tool$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/carry.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "permitude-redeem": {
+    "PostToolUse": [
+      {
+        "matcher": "^call_mcp_tool$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/redeem.py",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}

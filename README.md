@@ -1,14 +1,17 @@
-# Permitude for Claude Code
+# Permitude
 
 Design a deck — framing, hardware, code checks, and a permit-ready drawing set —
-by describing what you want.
+by describing what you want to the coding agent you already use.
 
 **Permitude is in closed beta.** Installing it takes an invitation, and your
 invitation says how to start once it is installed.
 
 ## Install
 
-In a terminal, from the folder you want to design in:
+Run these from the folder you want to design in. Pick the section for your
+agent; one folder can hold more than one.
+
+### Claude Code
 
 ```bash
 claude plugin marketplace add https://get.permitude.com/.claude-plugin/marketplace.json
@@ -20,6 +23,31 @@ Claude Code there, and in none of your other work. Leave the flag off and it
 loads in every Claude Code session on the machine, which is rarely what you
 want.
 
+### Codex CLI
+
+```bash
+codex plugin marketplace add Po-Hsun-Su/permitude-plugin
+codex plugin add permitude@permitude
+```
+
+Codex installs for your whole machine rather than one folder, and it will not
+run Permitude's two hooks until you have looked at them: start Codex, type
+`/hooks`, and trust them. Until you do, a design check has no way to reach your
+design file and will tell you so.
+
+### Antigravity CLI
+
+```bash
+git clone https://github.com/Po-Hsun-Su/permitude-plugin
+agy plugin install ./permitude-plugin
+agy mcp add -t http -H "X-Permitude-Plugin: 12" permitude https://mcp.permitude.com/v1/mcp
+```
+
+Two commands because they do two things: the first copies Permitude's files
+into Antigravity's own folder, the second tells Antigravity where Permitude
+is. Both are for your whole machine rather than one folder. To remove it:
+`agy plugin uninstall permitude` and `agy mcp remove permitude`.
+
 ## Try it without installing
 
 Permitude is a handful of files. You can read all of them before you trust any of them:
@@ -29,17 +57,18 @@ git clone https://github.com/Po-Hsun-Su/permitude-plugin
 claude --plugin-dir ./permitude-plugin
 ```
 
-That loads Permitude for that one session and writes nothing to your
-configuration. Quit Claude Code and it is gone.
+That loads Permitude for that one Claude Code session and writes nothing to
+your configuration. Quit Claude Code and it is gone.
 
 ## Requirements
 
-- Claude Code, with an active Claude subscription
+- One of Claude Code, Codex CLI or Antigravity CLI, with an active
+  subscription to it
 - `git` and Python 3
 
 On macOS and Linux both are usually already there. On Windows you'll need
 [Git for Windows](https://git-scm.com/download/win) and Python 3, set up so that
-`git` and `python3` both work in a new terminal — or simply ask Claude Code to
+`git` and `python3` both work in a new terminal — or simply ask your agent to
 sort it out for you before you install.
 
 ## Privacy

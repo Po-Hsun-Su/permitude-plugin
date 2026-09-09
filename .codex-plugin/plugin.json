@@ -1,0 +1,25 @@
+{
+  "name": "permitude",
+  "version": "12.0.0",
+  "description": "Design a permit-ready deck. The plugin connects your coding agent to the Permitude studio; the design work happens there.",
+  "author": {
+    "name": "Permitude"
+  },
+  "homepage": "https://permitude.com",
+  "keywords": [
+    "deck",
+    "cad",
+    "permit",
+    "bim",
+    "construction"
+  ],
+  "mcpServers": "./.mcp.json",
+  "hooks": "./hooks/hooks.codex.json",
+  "interface": {
+    "displayName": "Permitude",
+    "shortDescription": "Design a permit-ready deck",
+    "developerName": "Permitude",
+    "category": "Productivity",
+    "websiteURL": "https://permitude.com"
+  }
+}
