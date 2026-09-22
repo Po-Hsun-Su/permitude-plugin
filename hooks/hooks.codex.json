@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__.*__(deck_build|site_context|design_feedback|sheet_page|permit_packet|vendor_doc|sdk_update|gallery_list|gallery_design|report_issue)",
+        "matcher": "mcp__.*__(deck_build|site_context|design_feedback|sheet_page|design_scene|permit_packet|vendor_doc|sdk_update|gallery_list|gallery_design|report_issue)",
         "hooks": [
           {
             "type": "command",
@@ -14,7 +14,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "mcp__.*__(site_context|permit_packet|sdk_update)",
+        "matcher": "mcp__.*__(site_context|permit_packet|sdk_update|design_scene)",
         "hooks": [
           {
             "type": "command",

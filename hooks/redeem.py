@@ -1,7 +1,7 @@
 """Permitude's post-tool hook. It spends what a Permitude result hands back:
 it downloads the permit packet, writes the Permitude reference copy into
-``cadkit/``, saves this property's starter design, and records which property
-this folder is bound to. The hook carries every byte and every credential, so
+``cadkit/``, saves this property's starter design, saves one build's scene
+beside the design, and records which property this folder is bound to. The hook carries every byte and every credential, so
 nothing the agent types has to.
 
 Where it writes is the folder the agent is working in, read the way
@@ -125,6 +125,16 @@ if m:
             notes.append('%s saved (%d bytes); rename it to design.py and grow the deck on it'%(dest,len(b)))
         except Exception as e:
             notes.append('the site seed download failed: %s'%e)
+m=re.search(r'PERMITUDE-SCENE-FETCH (\S+) ([A-Za-z0-9]{32}) (scene-[0-9a-f]{8}\.json)',txt)
+if m:
+    try:
+        dest=os.path.join(root,m.group(3))
+        b=fetch(m.group(1),m.group(2))
+        json.loads(b)
+        open(dest,'wb').write(b)
+        notes.append('%s saved (%d bytes); script over it, it is too large to read'%(dest,len(b)))
+    except Exception as e:
+        notes.append('the scene download failed: %s'%e)
 m=re.search(r'PERMITUDE-SITE-DATA ([A-Za-z0-9_=-]+)',txt)
 if m:
     try:

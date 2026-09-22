@@ -40,7 +40,7 @@ design file and will tell you so.
 ```bash
 git clone https://github.com/Po-Hsun-Su/permitude-plugin
 agy plugin install ./permitude-plugin
-agy mcp add -t http -H "X-Permitude-Plugin: 12" permitude https://mcp.permitude.com/v1/mcp
+agy mcp add -t http -H "X-Permitude-Plugin: 13" permitude https://mcp.permitude.com/v1/mcp
 ```
 
 Two commands because they do two things: the first copies Permitude's files
