@@ -1,6 +1,6 @@
 {
   "name": "permitude",
-  "version": "13.0.0",
+  "version": "14.0.0",
   "description": "Design a permit-ready deck. The plugin connects your coding agent to the Permitude studio; the design work happens there.",
   "author": {
     "name": "Permitude"
