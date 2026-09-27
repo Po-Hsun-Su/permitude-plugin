@@ -1,18 +1,36 @@
-"""Permitude's pre-tool hook. It puts into the tool call what the model
-cannot type: the bytes of the design file the call names, the version of the
-Permitude reference copy sitting beside it, and the property this folder is
-bound to.
+"""Permitude's pre-tool hook. It puts into a Permitude tool call what the
+model cannot type: the bytes of the design file the call names, the version
+of the Permitude reference copy sitting beside it, and the property this
+folder is bound to.
+
+What it refuses, so that nothing else ever leaves this machine through it:
+
+- **Any other server's call.** A tool of the same name on another MCP server
+  is left exactly as it was: nothing added, nothing approved.
+- **Any file outside the folder the agent is working in.** Every path is
+  resolved with its links followed, and only a regular file that is still
+  inside that folder is read. An absolute path elsewhere, a ``..`` that climbs
+  out, a link that points out, or a folder is not read.
+- **A design that is not a ``.py`` file, or is larger than the server
+  accepts.** It is not read either.
+
+A design that is not read travels as an empty ``source`` beside the path the
+call named, and the server's answer names that path and these rules, so the
+agent can tell the customer what to move.
 
 Which folder that is comes from the agent. Claude Code names it in
 ``CLAUDE_PROJECT_DIR``; Codex CLI runs this hook inside it; Antigravity CLI
 sends it as ``workspacePaths`` and runs this hook from the installed plugin's
 own directory instead, so nothing here may be read relative to the working
 directory. An Antigravity run started without ``--add-dir`` sends no workspace
-at all: a design named by a relative path is then not found, and the server
-refuses the build by naming the path it tried — never a design that arrives
-empty.
+at all: nothing is read, and the server refuses the build by naming the path
+it was given — never a design that arrives empty.
 """
-import json,os,sys
+import json,os,re,sys
+
+SERVER='permitude'
+TOOLS=('read_reference','read_project','read_gallery','set_project','deck_build','report_issue')
+MAX_BYTES=500_000
 
 def envelope(d):
     """Which hook protocol this payload arrived on, as the one thing that
@@ -28,10 +46,11 @@ def envelope(d):
     ``replace-allow`` — Codex CLI. The same events and answer as ``replace``,
     but Codex reports ``updatedInput`` as an error unless the same answer
     carries ``permissionDecision: "allow"``, which also lets the call proceed
-    without Codex's own approval prompt. Told apart from Claude Code by the
-    ``turn_id`` field only Codex sends and the ``PLUGIN_ROOT`` variable only
-    Codex sets; Claude Code never receives the allow, so its permission
-    prompt is untouched.
+    without Codex's own approval prompt. That answer is only ever given to a
+    call :func:`permitude_call` has found to be Permitude's own. Told apart
+    from Claude Code by the ``turn_id`` field only Codex sends and the
+    ``PLUGIN_ROOT`` variable only Codex sets; Claude Code never receives the
+    allow, so its permission prompt is untouched.
     https://learn.chatgpt.com/docs/hooks
 
     ``dispatch`` — Antigravity CLI. Every MCP call is one dispatcher tool
@@ -53,35 +72,73 @@ def envelope(d):
         return 'replace-allow'
     return 'replace'
 
+def permitude_call(d):
+    """The Permitude tool this payload calls and that call's arguments, or
+    ``None`` when the call goes to any other server.
+
+    Claude Code and Codex name the server inside the tool's own name —
+    ``mcp__plugin_permitude_permitude__<tool>`` for the installed plugin,
+    ``mcp__permitude__<tool>`` for a server registered under that name by
+    hand or by Codex. Antigravity names it as the call's ``ServerName``.
+    """
+    if envelope(d)=='dispatch':
+        call=(d.get('toolCall') or {}).get('args') or {}
+        server,tool,args=call.get('ServerName'),call.get('ToolName'),call.get('Arguments')
+    else:
+        m=re.fullmatch(r'mcp__(?:plugin_permitude_)?(permitude)__([a-z_]+)',str(d.get('tool_name') or ''))
+        server,tool,args=(m.group(1),m.group(2),d.get('tool_input')) if m else (None,None,None)
+    if server!=SERVER or tool not in TOOLS:
+        return None
+    return tool,dict(args) if isinstance(args,dict) else {}
+
+def workspace(d):
+    """The folder the agent is working in, or ``None`` when it named none."""
+    if envelope(d)=='dispatch':
+        return (d.get('workspacePaths') or [None])[0]
+    return os.environ.get('CLAUDE_PROJECT_DIR') or os.getcwd()
+
+def read_inside(root,path,suffix=''):
+    """The text of ``path`` (relative to ``root``, or absolute) when, with
+    every link followed, it is a regular file inside ``root`` whose name ends
+    in ``suffix`` and whose size is at most ``MAX_BYTES``; ``None`` for
+    anything else."""
+    if not root or not path:
+        return None
+    try:
+        top=os.path.realpath(root)
+        real=os.path.realpath(os.path.join(root,path))
+        if os.path.commonpath([top,real])!=top or not real.endswith(suffix):
+            return None
+        if not os.path.isfile(real) or os.path.getsize(real)>MAX_BYTES:
+            return None
+        with open(real,encoding='utf-8') as f:
+            return f.read()
+    except Exception:
+        return None
+
 d=json.load(sys.stdin)
-shape=envelope(d)
-if shape=='dispatch':
-    call=dict((d.get('toolCall') or {}).get('args') or {})
-    if str(call.get('ServerName') or '')!='permitude':
-        print('{}')
-        sys.exit()
-    i=dict(call.get('Arguments') or {})
-    n=str(call.get('ToolName') or '')
-    root=(d.get('workspacePaths') or ['.'])[0]
-else:
-    i=dict(d.get('tool_input') or {})
-    n=str(d.get('tool_name') or '')
-    root=os.environ.get('CLAUDE_PROJECT_DIR') or '.'
-if n.endswith('deck_build'):
-    p=i.pop('path','')
-    if p and not os.path.isabs(p) and not os.path.exists(p):
-        p=os.path.join(root,p)
-    i['path_read']=p
-    try: i['source']=open(p,encoding='utf-8').read()
-    except Exception: i['source']=''
-    try: i['sdk_version']=open(os.path.join(os.path.dirname(os.path.abspath(p)),'cadkit','VERSION'),encoding='utf-8').read().strip()
-    except Exception: pass
-try: i['site_data']=open(os.path.join(root,'.permitude','site_data.json'),encoding='utf-8').read()
-except Exception: pass
-if shape=='dispatch':
+call=permitude_call(d)
+if call is None:
+    print('{}')
+    sys.exit()
+tool,i=call
+root=workspace(d)
+if tool=='deck_build':
+    p=str(i.pop('path','') or '')
+    i['path_read']=os.path.join(root,p) if p and root else p
+    i['source']=read_inside(root,p,'.py') or ''
+    if i['source']:
+        beside=os.path.dirname(os.path.realpath(os.path.join(root,p)))
+        version=read_inside(root,os.path.join(beside,'cadkit','VERSION'))
+        if version:
+            i['sdk_version']=version.strip()
+binding=read_inside(root,os.path.join('.permitude','site_data.json'))
+if binding is not None:
+    i['site_data']=binding
+if envelope(d)=='dispatch':
     print(json.dumps({'decision':'allow','overwrite':{'Arguments':i}}))
 else:
     out={'hookEventName':'PreToolUse','updatedInput':i}
-    if shape=='replace-allow':
+    if envelope(d)=='replace-allow':
         out['permissionDecision']='allow'
     print(json.dumps({'hookSpecificOutput':out}))

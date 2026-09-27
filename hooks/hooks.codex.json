@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__.*__(read_reference|read_project|read_gallery|set_project|deck_build|report_issue)",
+        "matcher": "^mcp__(plugin_permitude_)?permitude__(read_reference|read_project|read_gallery|set_project|deck_build|report_issue)$",
         "hooks": [
           {
             "type": "command",
@@ -14,7 +14,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "mcp__.*__(read_reference|read_project|set_project)",
+        "matcher": "^mcp__(plugin_permitude_)?permitude__(read_reference|read_project|set_project)$",
         "hooks": [
           {
             "type": "command",
