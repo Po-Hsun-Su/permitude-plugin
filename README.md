@@ -3,8 +3,17 @@
 Design a deck — framing, hardware, code checks, and a permit-ready drawing set —
 by describing what you want to the coding agent you already use.
 
-**Permitude is in closed beta.** Installing it takes an invitation, and your
-invitation says how to start once it is installed.
+**Permitude is in closed beta.** Anyone can install the plugin below, but
+using Permitude takes an invitation: nothing works until you sign in, and
+signing in only works for an email address we have invited. Sign-in happens
+in your browser. An address we have not invited is still asked to check its
+email for a code, and no code ever arrives — that is what it looks like when
+you have not been invited.
+
+To ask for an invitation, write to <support@permitude.com> and say where the
+deck goes. Once you are invited, sign in with exactly the email address your
+invitation names; any other address, even another of your own, gets no code.
+Your invitation also says how to start once Permitude is installed.
 
 ## Install
 
@@ -21,7 +30,8 @@ claude plugin install permitude --scope project
 `--scope project` keeps Permitude in that one folder: it loads when you start
 Claude Code there, and in none of your other work. Leave the flag off and it
 loads in every Claude Code session on the machine, which is rarely what you
-want.
+want. To remove it, from that folder:
+`claude plugin uninstall permitude --scope project`.
 
 ### Codex CLI
 
@@ -33,14 +43,15 @@ codex plugin add permitude@permitude
 Codex installs for your whole machine rather than one folder, and it will not
 run Permitude's two hooks until you have looked at them: start Codex, type
 `/hooks`, and trust them. Until you do, a design check has no way to reach your
-design file and will tell you so.
+design file and will tell you so. To remove it:
+`codex plugin remove permitude@permitude`.
 
 ### Antigravity CLI
 
 ```bash
 git clone https://github.com/Po-Hsun-Su/permitude-plugin
 agy plugin install ./permitude-plugin
-agy mcp add -t http -H "X-Permitude-Plugin: 15" permitude https://mcp.permitude.com/v1/mcp
+agy mcp add -t http -H "X-Permitude-Plugin: 16" permitude https://mcp.permitude.com/v1/mcp
 ```
 
 Two commands because they do two things: the first copies Permitude's files
@@ -75,9 +86,16 @@ sort it out for you before you install.
 
 Permitude receives the deck design it checks for you: designing a deck is what
 you came for, and the design has to reach us to be checked and drawn. It is sent
-only when a check runs — the one file that check names, plus the version stamp
-of the reference library Permitude itself writes into your folder, so a check
-can tell you when that reference copy is out of date.
+only when a check runs — the one file that check names, its name inside your
+folder (never where that folder is on your computer), and the version stamp
+of the reference library Permitude itself writes into your folder, so a
+check can tell you when that reference copy is out of date.
+
+Once you have set the property you are designing for, Permitude keeps a small
+record of it in your folder (`.permitude/site_data.json`: the address, the
+parcel number and the date it was looked up), and that record goes with every
+call your agent makes to Permitude, so each call says which project it is
+about.
 
 One more thing can be sent, and only when your agent chooses to: a short
 note it writes when something in Permitude's own kit gets in its way — a

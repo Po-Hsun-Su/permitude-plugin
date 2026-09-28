@@ -14,9 +14,13 @@ What it refuses, so that nothing else ever leaves this machine through it:
 - **A design that is not a ``.py`` file, or is larger than the server
   accepts.** It is not read either.
 
-A design that is not read travels as an empty ``source`` beside the path the
-call named, and the server's answer names that path and these rules, so the
-agent can tell the customer what to move.
+Beside the design goes where it sits: its path inside that folder, however
+the call spelled it, or only the file's name when it lies anywhere else. No
+folder outside the working folder is ever named to the server.
+
+A design that is not read travels as an empty ``source`` beside that name,
+and the server's answer names it and these rules, so the agent can tell the
+customer what to move.
 
 Which folder that is comes from the agent. Claude Code names it in
 ``CLAUDE_PROJECT_DIR``; Codex CLI runs this hook inside it; Antigravity CLI
@@ -97,6 +101,19 @@ def workspace(d):
         return (d.get('workspacePaths') or [None])[0]
     return os.environ.get('CLAUDE_PROJECT_DIR') or os.getcwd()
 
+def named_inside(root,path):
+    """``path`` as the server is told it: relative to ``root`` when, with
+    every link followed, it leads inside ``root``; the file's name alone
+    otherwise, or when there is no ``root``."""
+    try:
+        top=os.path.realpath(root)
+        real=os.path.realpath(os.path.join(root,path))
+        if os.path.commonpath([top,real])==top:
+            return os.path.relpath(real,top)
+    except Exception:
+        pass
+    return os.path.basename(os.path.normpath(path)) or path
+
 def read_inside(root,path,suffix=''):
     """The text of ``path`` (relative to ``root``, or absolute) when, with
     every link followed, it is a regular file inside ``root`` whose name ends
@@ -125,7 +142,7 @@ tool,i=call
 root=workspace(d)
 if tool=='deck_build':
     p=str(i.pop('path','') or '')
-    i['path_read']=os.path.join(root,p) if p and root else p
+    i['path_read']=named_inside(root,p) if p else p
     i['source']=read_inside(root,p,'.py') or ''
     if i['source']:
         beside=os.path.dirname(os.path.realpath(os.path.join(root,p)))

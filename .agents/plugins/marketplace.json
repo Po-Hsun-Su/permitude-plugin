@@ -10,7 +10,7 @@
         "source": "local",
         "path": "./"
       },
-      "description": "Design a permit-ready deck. The plugin connects your coding agent to the Permitude studio; the design work happens there."
+      "description": "Design a permit-ready deck with your own coding agent: it writes the design, and Permitude checks it and draws its sheets. The studio is where you review each build."
     }
   ]
 }
