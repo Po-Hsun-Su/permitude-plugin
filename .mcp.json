@@ -5,10 +5,10 @@
       "url": "https://mcp.permitude.com/v1/mcp",
       "timeout": 120000,
       "headers": {
-        "X-Permitude-Plugin": "16"
+        "X-Permitude-Plugin": "17"
       },
       "http_headers": {
-        "X-Permitude-Plugin": "16"
+        "X-Permitude-Plugin": "17"
       }
     }
   }

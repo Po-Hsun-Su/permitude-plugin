@@ -11,7 +11,7 @@ What it refuses, so that nothing else ever leaves this machine through it:
   resolved with its links followed, and only a regular file that is still
   inside that folder is read. An absolute path elsewhere, a ``..`` that climbs
   out, a link that points out, or a folder is not read.
-- **A design that is not a ``.py`` file, or is larger than the server
+- **A design that is not a ``.ts`` file, or is larger than the server
   accepts.** It is not read either.
 
 Beside the design goes where it sits: its path inside that folder, however
@@ -143,7 +143,7 @@ root=workspace(d)
 if tool=='deck_build':
     p=str(i.pop('path','') or '')
     i['path_read']=named_inside(root,p) if p else p
-    i['source']=read_inside(root,p,'.py') or ''
+    i['source']=read_inside(root,p,'.ts') or ''
     if i['source']:
         beside=os.path.dirname(os.path.realpath(os.path.join(root,p)))
         version=read_inside(root,os.path.join(beside,'cadkit','VERSION'))

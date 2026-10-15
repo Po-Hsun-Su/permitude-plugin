@@ -32,7 +32,7 @@ HANDS_BACK={
     ('read_reference','sdk'):r'cadkit\.zip',
     ('read_project','packet'):r'permit_packet\.pdf',
     ('read_project','scene'):r'scene-[0-9a-f]{8}\.json',
-    ('set_project','site'):r'design_seed\.py',
+    ('set_project','site'):r'design_seed\.ts',
 }
 BINDS=('set_project','site')
 
@@ -154,11 +154,11 @@ def unpack_sdk(b):
         return 'cadkit/ was already current (version %s)'%new
     return 'cadkit/ written (version %s)'%new
 def save_seed(b):
-    dest=os.path.join(root,'design_seed.py')
+    dest=os.path.join(root,'design_seed.ts')
     fd=os.open(dest,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o644)
     try: os.write(fd,b)
     finally: os.close(fd)
-    return '%s saved (%d bytes); rename it to design.py and grow the deck on it'%(dest,len(b))
+    return '%s saved (%d bytes); rename it to design.ts and grow the deck on it'%(dest,len(b))
 def save_scene(name):
     def save(b):
         dest=os.path.join(root,name)
@@ -174,11 +174,11 @@ def redeem(line,names):
     m=re.fullmatch(r'PERMITUDE-FETCH (\S+) ([A-Za-z0-9]{32}) (%s)'%names,line)
     if not m: return
     name=m.group(3)
-    if name=='design_seed.py' and os.path.exists(os.path.join(root,name)):
-        notes.append('design_seed.py already exists, so the site seed was NOT downloaded and nothing was overwritten; move that file aside and set the site again')
+    if name=='design_seed.ts' and os.path.exists(os.path.join(root,name)):
+        notes.append('design_seed.ts already exists, so the site seed was NOT downloaded and nothing was overwritten; move that file aside and set the site again')
         return
     what={'permit_packet.pdf':('packet',save_packet),'cadkit.zip':('SDK',unpack_sdk),
-          'design_seed.py':('site seed',save_seed)}.get(name,('scene',save_scene(name)))
+          'design_seed.ts':('site seed',save_seed)}.get(name,('scene',save_scene(name)))
     try:
         notes.append(what[1](fetch(m.group(1),m.group(2))))
     except Exception as e:

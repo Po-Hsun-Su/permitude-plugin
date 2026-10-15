@@ -1,6 +1,6 @@
 {
   "name": "permitude",
-  "version": "16.0.0",
+  "version": "17.0.0",
   "description": "Design a permit-ready deck with your own coding agent: it writes the design, and Permitude checks it and draws its sheets. The studio is where you review each build.",
   "author": {
     "name": "Permitude"
