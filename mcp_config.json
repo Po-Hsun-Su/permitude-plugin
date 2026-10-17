@@ -3,7 +3,7 @@
     "permitude": {
       "serverUrl": "https://mcp.permitude.com/v1/mcp",
       "headers": {
-        "X-Permitude-Plugin": "17"
+        "X-Permitude-Plugin": "18"
       }
     }
   }

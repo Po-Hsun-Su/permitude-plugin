@@ -155,7 +155,7 @@ def unpack_sdk(b):
     return 'cadkit/ written (version %s)'%new
 def save_seed(b):
     dest=os.path.join(root,'design_seed.ts')
-    fd=os.open(dest,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o644)
+    fd=os.open(dest,os.O_WRONLY|os.O_CREAT|os.O_EXCL|getattr(os,'O_BINARY',0),0o644)
     try: os.write(fd,b)
     finally: os.close(fd)
     return '%s saved (%d bytes); rename it to design.ts and grow the deck on it'%(dest,len(b))
