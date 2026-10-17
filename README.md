@@ -15,6 +15,20 @@ deck goes. Once you are invited, sign in with exactly the email address your
 invitation names; any other address, even another of your own, gets no code.
 Your invitation also says how to start once Permitude is installed.
 
+## Requirements
+
+`git` and Python 3. On macOS and Linux both are usually already there. On
+Windows, install them from PowerShell, then open a new PowerShell window so it
+finds them:
+
+```powershell
+winget install --id Git.Git -e
+winget install --id 9PNRBTZXMB4Z -e --accept-package-agreements --accept-source-agreements
+```
+
+The second line is the Microsoft Store's Python 3.13, which provides the
+`python3` command; the installer from python.org does not.
+
 ## Install
 
 Run these from the folder you want to design in. Pick the section for your
