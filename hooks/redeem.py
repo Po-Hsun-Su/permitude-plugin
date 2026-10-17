@@ -64,6 +64,15 @@ def envelope(d):
     """
     return 'dispatch' if 'toolCall' in d else 'replace'
 
+def bundled_server():
+    """The name Antigravity gives the server this plugin bundles, read the
+    way ``carry.py`` reads it."""
+    try:
+        with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'plugin.json'),encoding='utf-8') as f:
+            return json.load(f)['name']+'_'+SERVER
+    except Exception:
+        return SERVER
+
 def permitude_call(d):
     """The Permitude tool this result came from and the ``what`` it was
     called with, or ``None`` for a result from any other server. The server
@@ -71,6 +80,8 @@ def permitude_call(d):
     if envelope(d)=='dispatch':
         call=(d.get('toolCall') or {}).get('args') or {}
         server,tool,args=call.get('ServerName'),call.get('ToolName'),call.get('Arguments')
+        if server==bundled_server():
+            server=SERVER
     else:
         m=re.fullmatch(r'mcp__(?:plugin_permitude_)?(permitude)__([a-z_]+)',str(d.get('tool_name') or ''))
         server,tool,args=(m.group(1),m.group(2),d.get('tool_input')) if m else (None,None,None)

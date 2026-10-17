@@ -76,6 +76,19 @@ def envelope(d):
         return 'replace-allow'
     return 'replace'
 
+# CONSTRAINT: Antigravity CLI registers a server a plugin bundles as
+# `<plugin>_<server>`, `<plugin>` being the plugin.json name (its own changelog,
+# printed inside the agy 1.4.0 binary; seen as `permitude_permitude` in /mcp).
+def bundled_server():
+    """The name Antigravity gives the server this plugin bundles, read from
+    the installed copy's own ``plugin.json`` — plain ``permitude`` when that
+    cannot be read."""
+    try:
+        with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),'plugin.json'),encoding='utf-8') as f:
+            return json.load(f)['name']+'_'+SERVER
+    except Exception:
+        return SERVER
+
 def permitude_call(d):
     """The Permitude tool this payload calls and that call's arguments, or
     ``None`` when the call goes to any other server.
@@ -83,11 +96,15 @@ def permitude_call(d):
     Claude Code and Codex name the server inside the tool's own name —
     ``mcp__plugin_permitude_permitude__<tool>`` for the installed plugin,
     ``mcp__permitude__<tool>`` for a server registered under that name by
-    hand or by Codex. Antigravity names it as the call's ``ServerName``.
+    hand or by Codex. Antigravity names it as the call's ``ServerName``:
+    :func:`bundled_server` for the installed plugin, ``permitude`` for a
+    server registered under that name by hand.
     """
     if envelope(d)=='dispatch':
         call=(d.get('toolCall') or {}).get('args') or {}
         server,tool,args=call.get('ServerName'),call.get('ToolName'),call.get('Arguments')
+        if server==bundled_server():
+            server=SERVER
     else:
         m=re.fullmatch(r'mcp__(?:plugin_permitude_)?(permitude)__([a-z_]+)',str(d.get('tool_name') or ''))
         server,tool,args=(m.group(1),m.group(2),d.get('tool_input')) if m else (None,None,None)

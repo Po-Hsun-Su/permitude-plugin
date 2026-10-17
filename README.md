@@ -48,24 +48,22 @@ codex plugin marketplace add Po-Hsun-Su/permitude-plugin
 codex plugin add permitude@permitude
 ```
 
-Codex installs for your whole machine rather than one folder, and it will not
-run Permitude's two hooks until you have looked at them: start Codex, type
-`/hooks`, and trust them. Until you do, a design check has no way to reach your
-design file and will tell you so. To remove it:
+Codex installs for your whole machine rather than one folder. Then start
+Codex in the folder you want to design in and type two commands. `/hooks`
+shows Permitude's two hooks: trust them, because until you do a design check
+has no way to reach your design file and will tell you so.
+`/mcp login permitude` signs you in. To remove it:
 `codex plugin remove permitude@permitude`.
 
 ### Antigravity CLI
 
 ```bash
-git clone https://github.com/Po-Hsun-Su/permitude-plugin
-agy plugin install ./permitude-plugin
-agy mcp add -t http -H "X-Permitude-Plugin: 18" permitude https://mcp.permitude.com/v1/mcp
+agy plugin install https://github.com/Po-Hsun-Su/permitude-plugin
 ```
 
-Two commands because they do two things: the first copies Permitude's files
-into Antigravity's own folder, the second tells Antigravity where Permitude
-is. Both are for your whole machine rather than one folder. To remove it:
-`agy plugin uninstall permitude` and `agy mcp remove permitude`.
+This needs Antigravity CLI 1.4.0 or later (`agy --version`). It installs for
+your whole machine rather than one folder. To remove it:
+`agy plugin uninstall permitude`.
 
 ## Try it without installing
 
