@@ -18,16 +18,10 @@ Your invitation also says how to start once Permitude is installed.
 ## Requirements
 
 `git` and Python 3. On macOS and Linux both are usually already there. On
-Windows, install them from PowerShell, then open a new PowerShell window so it
-finds them:
-
-```powershell
-winget install --id Git.Git -e
-winget install --id 9PNRBTZXMB4Z -e --accept-package-agreements --accept-source-agreements
-```
-
-The second line is the Microsoft Store's Python 3.13, which provides the
-`python3` command; the installer from python.org does not.
+Windows, install [Git for Windows](https://git-scm.com/install/windows) and
+[Python 3.13 from the Microsoft Store](https://apps.microsoft.com/detail/9pnrbtzxmb4z),
+published by the Python Software Foundation. The installer from python.org
+will not do: it provides no `python3` command.
 
 ## Install
 
