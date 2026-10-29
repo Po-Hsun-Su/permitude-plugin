@@ -17,11 +17,13 @@ Your invitation also says how to start once Permitude is installed.
 
 ## Requirements
 
-`git` and Python 3. On macOS and Linux both are usually already there. On
-Windows, install [Git for Windows](https://git-scm.com/install/windows) and
-[Python 3.13 from the Microsoft Store](https://apps.microsoft.com/detail/9pnrbtzxmb4z),
-published by the Python Software Foundation. The installer from python.org
-will not do: it provides no `python3` command.
+One of Claude Code, Codex CLI or Antigravity CLI, with an active subscription to
+it, plus `git` and Python 3. On macOS and Linux both are usually already there.
+On Windows, install [Git for Windows](https://git-scm.com/install/windows) and
+[Python 3.13 from the Microsoft
+Store](https://apps.microsoft.com/detail/9pnrbtzxmb4z), published by the Python
+Software Foundation. The installer from python.org will not do: it provides no
+`python3` command.
 
 ## Install
 
@@ -76,17 +78,6 @@ claude --plugin-dir ./permitude-plugin
 
 That loads Permitude for that one Claude Code session and writes nothing to
 your configuration. Quit Claude Code and it is gone.
-
-## Requirements
-
-- One of Claude Code, Codex CLI or Antigravity CLI, with an active
-  subscription to it
-- `git` and Python 3
-
-On macOS and Linux both are usually already there. On Windows you'll need
-[Git for Windows](https://git-scm.com/download/win) and Python 3, set up so that
-`git` and `python3` both work in a new terminal — or simply ask your agent to
-sort it out for you before you install.
 
 ## Privacy
 
